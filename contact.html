@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Contact Us | Brilliant Beacon Services</title>
+<meta name="description" content="Get in touch with Brilliant Beacon Services to request a quote or ask a question about home maintenance, cleaning, painting, decoration or wardrobe repairs.">
+<link rel="canonical" href="https://brilliantbeaconservices.co.uk/contact.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Contact Us | Brilliant Beacon Services">
+<meta property="og:description" content="Get in touch to request a quote or ask a question about our services.">
+<meta property="og:url" content="https://brilliantbeaconservices.co.uk/contact.html">
+<meta property="og:image" content="https://brilliantbeaconservices.co.uk/images/logo/brilliant-beacon-logo.jpg">
+<link rel="icon" href="images/logo/brilliant-beacon-logo.jpg">
+
+<!-- Fonts: Montserrat for headings/buttons, Lato for body text -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/responsive.css">
+<!-- Plausible Analytics: cookie-free, no personal data collected, no consent banner required under UK PECR/GDPR. -->
+<script defer data-domain="brilliantbeaconservices.co.uk" src="https://plausible.io/js/script.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html">
+      <img src="images/logo/brilliant-beacon-logo-header.png" alt="Brilliant Beacon Services logo">
+      <span class="visually-hidden">Brilliant Beacon Services</span>
+    </a>
+    <a class="header-phone" href="tel:+447448139783" aria-label="Call Brilliant Beacon Services on +44 7448 139783"><span class="header-phone-icon" aria-hidden="true">📞</span><span class="header-phone-text">+44 7448 139783</span></a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </button>
+    <nav class="main-nav" id="main-nav" aria-label="Primary">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html" aria-current="page">Contact</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a class="btn btn-secondary on-light btn-sm" href="payment.html">Make a Payment</a>
+        <a class="btn btn-primary btn-sm" href="contact.html">Get a Quote</a>
+      </div>
+    </nav>
+  </div>
+  <div class="nav-backdrop"></div>
+</header>
+
+<main id="main">
+  <header class="page-header">
+    <div class="container">
+      <h1>Contact Us</h1>
+      <p>Tell us what you need and we'll get back to you.</p>
+    </div>
+  </header>
+
+  <section id="get-in-touch">
+    <div class="container">
+      <div style="max-width: 640px; margin-bottom: var(--space-6);">
+        <h2>Get In Touch</h2>
+        <p>Have a question, need a quote, or want to discuss a job before booking it in? Fill in the form below with a few details and a member of our team will get back to you, or email us directly using the button below if that's easier.</p>
+        <a class="btn btn-secondary on-light" href="mailto:info@brilliantbeaconservices.co.uk">✉ Email Us Directly</a>
+      </div>
+
+      <div class="grid grid-2" style="align-items:flex-start; gap: var(--space-8);">
+        <div>
+          <h3>Send an Enquiry</h3>
+
+          <div class="form-status" id="form-status" role="status" hidden></div>
+
+          <form id="contact-form" novalidate>
+            <!-- Honeypot spam trap: real users never see or fill this field -->
+            <div class="hp-field" aria-hidden="true">
+              <label for="company-website">Leave this field blank</label>
+              <input type="text" id="company-website" name="company-website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="form-field" id="field-name">
+              <label for="name">Full Name <span aria-hidden="true">*</span></label>
+              <input type="text" id="name" name="name" autocomplete="name" required aria-required="true">
+              <p class="error-message" id="error-name">Please enter your full name.</p>
+            </div>
+
+            <div class="form-field" id="field-email">
+              <label for="email">Email Address <span aria-hidden="true">*</span></label>
+              <input type="email" id="email" name="email" autocomplete="email" required aria-required="true">
+              <p class="error-message" id="error-email">Please enter a valid email address.</p>
+            </div>
+
+            <div class="form-field" id="field-telephone">
+              <label for="telephone">Telephone Number</label>
+              <input type="tel" id="telephone" name="telephone" autocomplete="tel">
+              <p class="hint">Optional, but helpful if you'd prefer we call you back.</p>
+            </div>
+
+            <div class="form-field" id="field-preferred-contact">
+              <label for="preferred-contact">Preferred Contact Method</label>
+              <select id="preferred-contact" name="preferredContact">
+                <option value="">No preference</option>
+                <option value="Email">Email</option>
+                <option value="Phone">Phone</option>
+              </select>
+              <p class="hint">Optional — let us know how you'd rather we reply.</p>
+            </div>
+
+            <div class="form-field" id="field-service">
+              <label for="service">Service Required <span aria-hidden="true">*</span></label>
+              <select id="service" name="service" required aria-required="true">
+                <option value="">Please select...</option>
+                <option value="Home Maintenance">Home Maintenance</option>
+                <option value="Cleaning">Cleaning</option>
+                <option value="Wardrobe Repair & Assembly">Wardrobe Repair &amp; Assembly</option>
+                <option value="Painting">Painting</option>
+                <option value="Decoration">Decoration</option>
+                <option value="Multiple Services">Multiple Services</option>
+                <option value="Other / Not Sure">Other / Not sure</option>
+              </select>
+              <p class="error-message" id="error-service">Please select a service.</p>
+            </div>
+
+            <div class="form-field" id="field-message">
+              <label for="message">Message <span aria-hidden="true">*</span></label>
+              <textarea id="message" name="message" rows="6" required aria-required="true"></textarea>
+              <p class="error-message" id="error-message-field">Please enter a message.</p>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="contact-submit">Send Enquiry</button>
+
+            <p class="hint" style="margin-top: var(--space-4);">
+              We only use the details you provide to respond to your enquiry. See our
+              <a href="privacy.html">Privacy Policy</a>, <a href="cookies.html">Cookie Policy</a> and
+              <a href="terms.html">Terms &amp; Conditions</a> for more information.
+            </p>
+          </form>
+        </div>
+
+        <aside>
+          <div class="info-box">
+            <h3>Other Ways to Reach Us</h3>
+            <p class="contact-highlight"><strong>Email</strong><a href="mailto:info@brilliantbeaconservices.co.uk">info@<wbr>brilliantbeaconservices.co.uk</a></p>
+            <p class="contact-highlight"><strong>Telephone</strong><a href="tel:+447448139783">+44 7448 139783</a></p>
+            <p><strong>Address:</strong> 128 City Road, London, EC1V 2NX, United Kingdom</p>
+            <p><strong>Opening Hours:</strong> Monday–Saturday, 7am–9pm (closed Sundays)</p>
+            <p><strong>Service Area:</strong> UK</p>
+            <p>You can also use the chat assistant on this website for general questions or to start a quote request.</p>
+          </div>
+
+          <div class="info-box" style="margin-top: var(--space-6);">
+            <h3>Follow Us <span class="coming-soon-badge">Coming Soon</span></h3>
+            <p>We're setting up our official social media accounts. Once they're confirmed, you'll be able to follow Brilliant Beacon Services here.</p>
+            <ul class="social-links-pending" aria-label="Social media accounts, coming soon">
+              <li><span class="social-icon-pending" aria-hidden="true">f</span><span class="visually-hidden">Facebook — coming soon</span></li>
+              <li><span class="social-icon-pending" aria-hidden="true">IG</span><span class="visually-hidden">Instagram — coming soon</span></li>
+              <li><span class="social-icon-pending" aria-hidden="true">in</span><span class="visually-hidden">LinkedIn — coming soon</span></li>
+              <li><span class="social-icon-pending" aria-hidden="true">X</span><span class="visually-hidden">X (Twitter) — coming soon</span></li>
+            </ul>
+            <p class="social-links-note">No official accounts are shown until Brilliant Beacon Services confirms them.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="images/logo/brilliant-beacon-logo-header.png" alt="Brilliant Beacon Services logo">
+          <span>Brilliant Beacon Services</span>
+        </div>
+        <p>Home maintenance, cleaning, painting, decoration and wardrobe repairs for properties across the UK.</p>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="payment.html">Make a Payment</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="cookies.html">Cookie Policy</a></li>
+          <li><a href="terms.html">Terms &amp; Conditions</a></li>
+          <li><a href="payment-terms.html">Payment Terms</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li class="footer-contact-text">128 City Road, London, EC1V 2NX, United Kingdom</li><li><a href="tel:+447448139783" class="footer-contact-highlight">+44 7448 139783</a></li><li class="footer-contact-text">Mon–Sat: 7am–9pm</li>
+          <li><a href="mailto:info@brilliantbeaconservices.co.uk" class="footer-contact-highlight">info@<wbr>brilliantbeaconservices<wbr>.co.uk</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> Brilliant Beacon Services. All rights reserved.</span>
+      <span>Brilliant Beacon Services Ltd is registered in England &amp; Wales, company number 17156886.</span>
+    </div>
+  </div>
+</footer>
+
+<button class="chat-launcher" id="chat-launcher" aria-haspopup="dialog" aria-expanded="false" aria-controls="chat-window">
+  <span aria-hidden="true">💬</span><span class="label">Chat with us</span>
+</button>
+<section class="chat-window" id="chat-window" hidden role="dialog" aria-modal="false" aria-labelledby="chat-title">
+  <header class="chat-header">
+    <strong id="chat-title">Brilliant Beacon Services</strong>
+    <div class="chat-header-actions">
+      <button id="chat-clear" type="button" aria-label="Clear conversation" title="Clear conversation">🗑</button>
+      <button id="chat-close" type="button" aria-label="Close chat">&times;</button>
+    </div>
+  </header>
+  <div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
+    <div class="chat-message bot">Hello! 👋 How can we help you today?</div>
+  </div>
+  <div class="chat-quick-actions">
+    <a class="btn btn-secondary on-light btn-sm" href="contact.html">Contact the Team</a>
+    <a class="btn btn-secondary on-light btn-sm" href="contact.html">Request a Quote</a>
+  </div>
+  <form class="chat-input-row" id="chat-form">
+    <label for="chat-input" class="visually-hidden">Type your message</label>
+    <textarea id="chat-input" rows="1" placeholder="Type your message..." required></textarea>
+    <button type="submit" aria-label="Send message">➤</button>
+  </form>
+  <p class="chat-footer-note">Our assistant uses information about Brilliant Beacon Services only and can't guarantee prices or availability. For anything urgent, please use the Contact page.</p>
+</section>
+
+<script src="js/navigation.js" defer></script>
+<script src="js/main.js" defer></script>
+<script src="js/contact.js" defer></script>
+<script src="js/chatbot.js" defer></script>
+</body>
+</html>

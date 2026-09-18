@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /payment.html
+Disallow: /payment-success.html
+Disallow: /payment-cancelled.html
+Disallow: /payment-error.html
+
+Sitemap: https://brilliantbeaconservices.co.uk/sitemap.xml

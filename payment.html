@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Make a Payment | Brilliant Beacon Services</title>
+<meta name="description" content="Pay Brilliant Beacon Services securely by PayPal, card, or bank transfer.">
+<link rel="canonical" href="https://brilliantbeaconservices.co.uk/payment.html">
+<meta name="robots" content="noindex">
+<link rel="icon" href="images/logo/brilliant-beacon-logo.jpg">
+
+<!-- Fonts: Montserrat for headings/buttons, Lato for body text -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/responsive.css">
+<!-- Plausible Analytics: cookie-free, no personal data collected, no consent banner required under UK PECR/GDPR. -->
+<script defer data-domain="brilliantbeaconservices.co.uk" src="https://plausible.io/js/script.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html">
+      <img src="images/logo/brilliant-beacon-logo-header.png" alt="Brilliant Beacon Services logo">
+      <span class="visually-hidden">Brilliant Beacon Services</span>
+    </a>
+    <a class="header-phone" href="tel:+447448139783" aria-label="Call Brilliant Beacon Services on +44 7448 139783"><span class="header-phone-icon" aria-hidden="true">📞</span><span class="header-phone-text">+44 7448 139783</span></a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </button>
+    <nav class="main-nav" id="main-nav" aria-label="Primary">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a class="btn btn-secondary on-light btn-sm" href="payment.html" aria-current="page">Make a Payment</a>
+        <a class="btn btn-primary btn-sm" href="contact.html">Get a Quote</a>
+      </div>
+    </nav>
+  </div>
+  <div class="nav-backdrop"></div>
+</header>
+
+<main id="main">
+  <header class="page-header">
+    <div class="container">
+      <h1>Make a Payment</h1>
+      <p>Choose the payment method that suits you best.</p>
+    </div>
+  </header>
+
+  <section>
+    <div class="container">
+      <p class="placeholder-note">Payment processing shown below requires live configuration (a real PayPal link, a card-payment provider account, and confirmed bank details) before it can be used by customers. Nothing here is a working payment link until Brilliant Beacon Services supplies and confirms these details. See <code>README.md</code> for setup instructions.</p>
+
+      <div class="payment-methods" style="margin-top: var(--space-7);">
+
+        <!-- PAYPAL -->
+        <div class="payment-method-card">
+          <h3><span aria-hidden="true">🅿️</span> PayPal</h3>
+          <p>Pay securely using your PayPal account or a card via PayPal.</p>
+          <ul>
+            <li>Redirects to PayPal's secure checkout</li>
+            <li>No card details stored on this website</li>
+          </ul>
+          <div class="placeholder-note">PAYPAL_PAYMENT_LINK has not been configured. Replace the link below once Brilliant Beacon Services supplies a real PayPal payment link.</div>
+          <a class="btn btn-primary btn-block" id="paypal-button" href="#" data-paypal-link="PAYPAL_PAYMENT_LINK" aria-disabled="true">Pay with PayPal</a>
+        </div>
+
+        <!-- CARD -->
+        <div class="payment-method-card">
+          <h3><span aria-hidden="true">💳</span> Pay by Card</h3>
+          <p>Pay by card via our secure hosted checkout, supporting cards accepted by our payment provider, including Visa and Mastercard where enabled.</p>
+          <ul>
+            <li>Handled by a secure, hosted payment page</li>
+            <li>Card details are never stored by this website</li>
+          </ul>
+          <div class="placeholder-note">Card payments require a configured payment provider (e.g. Stripe) and the <code>create-payment</code> Netlify function to be connected to a live account. Not yet active.</div>
+          <button class="btn btn-primary btn-block" id="card-pay-button" type="button" disabled>Pay by Card</button>
+        </div>
+
+        <!-- BANK TRANSFER -->
+        <div class="payment-method-card">
+          <h3><span aria-hidden="true">🏦</span> Pay by Bank Transfer</h3>
+          <p>Transfer payment directly using the following details.</p>
+          <table class="bank-details-table">
+            <tbody>
+              <tr><th scope="row">Account Name</th><td>[PLACEHOLDER — INFORMATION REQUIRED]</td></tr>
+              <tr><th scope="row">Bank</th><td>[PLACEHOLDER — INFORMATION REQUIRED]</td></tr>
+              <tr><th scope="row">IBAN</th><td>[PLACEHOLDER — INFORMATION REQUIRED]</td></tr>
+              <tr><th scope="row">BIC / SWIFT</th><td>[PLACEHOLDER — INFORMATION REQUIRED]</td></tr>
+              <tr><th scope="row">Payment Reference</th><td>[PLACEHOLDER — INFORMATION REQUIRED]</td></tr>
+            </tbody>
+          </table>
+          <p class="hint">Please use your name and the service booked as your payment reference, once confirmed with our team.</p>
+        </div>
+      </div>
+
+      <div class="info-box" style="margin-top: var(--space-8);">
+        <h3>How Payment Confirmation Works</h3>
+        <p>Reaching a payment confirmation page on this website does not, by itself, confirm that a payment has been received. Where our payment provider supports webhooks, payments are verified securely on our server before being treated as confirmed. See our <a href="payment-terms.html">Payment Terms</a> for full details.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="images/logo/brilliant-beacon-logo-header.png" alt="Brilliant Beacon Services logo">
+          <span>Brilliant Beacon Services</span>
+        </div>
+        <p>Home maintenance, cleaning, painting, decoration and wardrobe repairs for properties across the UK.</p>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="payment.html">Make a Payment</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="cookies.html">Cookie Policy</a></li>
+          <li><a href="terms.html">Terms &amp; Conditions</a></li>
+          <li><a href="payment-terms.html">Payment Terms</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li class="footer-contact-text">128 City Road, London, EC1V 2NX, United Kingdom</li><li><a href="tel:+447448139783" class="footer-contact-highlight">+44 7448 139783</a></li><li class="footer-contact-text">Mon–Sat: 7am–9pm</li>
+          <li><a href="mailto:info@brilliantbeaconservices.co.uk" class="footer-contact-highlight">info@<wbr>brilliantbeaconservices<wbr>.co.uk</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> Brilliant Beacon Services. All rights reserved.</span>
+      <span>Brilliant Beacon Services Ltd is registered in England &amp; Wales, company number 17156886.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/navigation.js" defer></script>
+<script src="js/main.js" defer></script>
+<script src="js/payment.js" defer></script>
+</body>
+</html>

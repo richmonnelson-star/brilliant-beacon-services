@@ -1,0 +1,23 @@
+# Brilliant Beacon Services — Cloudflare Pages headers file
+#
+# Cloudflare Pages reads this file automatically from the project root and
+# applies the listed headers to matching paths — this is the direct
+# equivalent of the [[headers]] blocks in netlify.toml, just in Cloudflare's
+# plain-text format instead of TOML. No further configuration is needed;
+# just make sure this file is included in the deployed folder.
+
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' https://plausible.io; connect-src 'self' https://api.paypal.com https://plausible.io; frame-ancestors 'none'
+
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/css/*
+  Cache-Control: public, max-age=604800
+
+/js/*
+  Cache-Control: public, max-age=604800
