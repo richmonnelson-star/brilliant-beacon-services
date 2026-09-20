@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enquiries | Brilliant Beacon Services</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    --color-primary: #0b1e3c;
+    --color-primary-dark: #071429;
+    --color-accent: #c9a227;
+    --color-accent-dark: #a9870f;
+    --color-text: #1a1e27;
+    --color-border: #dfe3ea;
+    --color-bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+  header {
+    background: var(--color-primary);
+    color: #fff;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  header h1 { font-size: 1.15rem; margin: 0; font-weight: 600; }
+  header .sub { font-size: 0.85rem; opacity: 0.75; }
+  main { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+
+  /* Login gate */
+  #login-screen {
+    max-width: 380px;
+    margin: 4rem auto;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+  }
+  #login-screen h2 { margin-top: 0; font-size: 1.1rem; }
+  #login-screen input[type="password"] {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  #login-screen button, .btn {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  #login-screen button:hover, .btn:hover { background: var(--color-primary-dark); }
+  #login-error { color: #b3261e; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.2em; }
+
+  /* Table view */
+  [hidden] { display: none !important; }
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .toolbar .btn { width: auto; padding: 0.5rem 1rem; font-size: 0.85rem; }
+  .count { font-size: 0.9rem; color: #555; }
+
+  .card-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .submission-card {
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+  }
+  .submission-card .row1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+  }
+  .submission-card .name { font-weight: 600; font-size: 1.05rem; }
+  .submission-card .date { font-size: 0.8rem; color: #777; }
+  .submission-card .service-tag {
+    display: inline-block;
+    background: var(--color-accent);
+    color: #3a2e00;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    margin-bottom: 0.5rem;
+  }
+  .submission-card .meta { font-size: 0.85rem; color: #444; margin-bottom: 0.5rem; }
+  .submission-card .meta a { color: var(--color-primary); }
+  .submission-card .message { font-size: 0.9rem; white-space: pre-wrap; line-height: 1.4; }
+
+  #empty-state, #error-state { text-align: center; padding: 3rem 1rem; color: #666; }
+  #error-state { color: #b3261e; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Contact Form Enquiries</h1>
+    <div class="sub">Brilliant Beacon Services — internal use only</div>
+  </div>
+  <button class="btn" id="logout-btn" hidden style="width:auto; padding:0.5rem 1rem; background:transparent; border:1px solid rgba(255,255,255,0.4); font-size:0.85rem;">Log out</button>
+</header>
+
+<main>
+  <div id="login-screen">
+    <h2>Enter password</h2>
+    <input type="password" id="password-input" placeholder="Password" autocomplete="current-password">
+    <button id="login-btn">View enquiries</button>
+    <div id="login-error"></div>
+  </div>
+
+  <div id="app-screen" hidden>
+    <div class="toolbar">
+      <div class="count" id="count-label"></div>
+      <button class="btn" id="refresh-btn">Refresh</button>
+    </div>
+    <div id="empty-state" hidden>No enquiries yet.</div>
+    <div id="error-state" hidden></div>
+    <div class="card-list" id="card-list"></div>
+  </div>
+</main>
+
+<script>
+(function () {
+  var password = null;
+
+  var loginScreen = document.getElementById('login-screen');
+  var appScreen = document.getElementById('app-screen');
+  var passwordInput = document.getElementById('password-input');
+  var loginBtn = document.getElementById('login-btn');
+  var loginError = document.getElementById('login-error');
+  var logoutBtn = document.getElementById('logout-btn');
+  var refreshBtn = document.getElementById('refresh-btn');
+  var cardList = document.getElementById('card-list');
+  var countLabel = document.getElementById('count-label');
+  var emptyState = document.getElementById('empty-state');
+  var errorState = document.getElementById('error-state');
+
+  function escapeHtml(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function formatDate(value) {
+    if (!value) return '';
+    var d = new Date(value);
+    if (isNaN(d.getTime())) return escapeHtml(value);
+    return d.toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+  }
+
+  function renderSubmissions(list) {
+    cardList.innerHTML = '';
+    if (!list.length) {
+      emptyState.hidden = false;
+      countLabel.textContent = '';
+      return;
+    }
+    emptyState.hidden = true;
+    countLabel.textContent = list.length + (list.length === 1 ? ' enquiry' : ' enquiries');
+
+    list.forEach(function (item) {
+      var card = document.createElement('div');
+      card.className = 'submission-card';
+
+      var telephoneLine = item.telephone
+        ? ' &middot; <a href="tel:' + escapeHtml(item.telephone) + '">' + escapeHtml(item.telephone) + '</a>'
+        : '';
+      var preferredLine = item.preferred_contact
+        ? ' &middot; Prefers: ' + escapeHtml(item.preferred_contact)
+        : '';
+
+      card.innerHTML =
+        '<div class="row1">' +
+          '<span class="name">' + escapeHtml(item.name) + '</span>' +
+          '<span class="date">' + formatDate(item.created_at) + '</span>' +
+        '</div>' +
+        '<div class="service-tag">' + escapeHtml(item.service) + '</div>' +
+        '<div class="meta">' +
+          '<a href="mailto:' + escapeHtml(item.email) + '">' + escapeHtml(item.email) + '</a>' +
+          telephoneLine + preferredLine +
+        '</div>' +
+        '<div class="message">' + escapeHtml(item.message) + '</div>';
+
+      cardList.appendChild(card);
+    });
+  }
+
+  function loadSubmissions() {
+    errorState.hidden = true;
+    emptyState.hidden = true;
+    countLabel.textContent = 'Loading…';
+
+    fetch('/api/admin-submissions', {
+      headers: { 'X-Admin-Password': password }
+    })
+      .then(function (res) {
+        if (res.status === 401) {
+          // Password was accepted before but server now rejects it (e.g.
+          // it was rotated) — send back to the login screen.
+          password = null;
+          appScreen.hidden = true;
+          logoutBtn.hidden = true;
+          loginScreen.hidden = false;
+          loginError.textContent = 'Session expired — please re-enter the password.';
+          throw new Error('unauthorized');
+        }
+        return res.json().then(function (data) {
+          if (!res.ok) throw new Error(data.error || 'Request failed');
+          return data;
+        });
+      })
+      .then(function (data) {
+        renderSubmissions(data.submissions || []);
+      })
+      .catch(function (err) {
+        if (err.message === 'unauthorized') return;
+        countLabel.textContent = '';
+        errorState.hidden = false;
+        errorState.textContent = 'Could not load enquiries: ' + err.message;
+      });
+  }
+
+  function attemptLogin() {
+    var candidate = passwordInput.value;
+    if (!candidate) return;
+
+    loginBtn.disabled = true;
+    loginError.textContent = '';
+
+    fetch('/api/admin-submissions', {
+      headers: { 'X-Admin-Password': candidate }
+    })
+      .then(function (res) {
+        return res.json().then(function (data) { return { ok: res.ok, data: data }; });
+      })
+      .then(function (result) {
+        loginBtn.disabled = false;
+        if (!result.ok) {
+          loginError.textContent = result.data.error || 'Incorrect password.';
+          return;
+        }
+        password = candidate;
+        passwordInput.value = '';
+        loginScreen.hidden = true;
+        appScreen.hidden = false;
+        logoutBtn.hidden = false;
+        renderSubmissions(result.data.submissions || []);
+      })
+      .catch(function () {
+        loginBtn.disabled = false;
+        loginError.textContent = 'Could not reach the server. Please try again.';
+      });
+  }
+
+  loginBtn.addEventListener('click', attemptLogin);
+  passwordInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') attemptLogin();
+  });
+  refreshBtn.addEventListener('click', loadSubmissions);
+  logoutBtn.addEventListener('click', function () {
+    password = null;
+    appScreen.hidden = true;
+    logoutBtn.hidden = true;
+    loginScreen.hidden = false;
+  });
+})();
+</script>
+
+</body>
+</html>
