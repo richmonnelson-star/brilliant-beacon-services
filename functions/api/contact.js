@@ -1,8 +1,9 @@
 /**
  * Brilliant Beacon Services — functions/api/contact.js (Cloudflare Pages Function)
  *
- * Receives contact-form submissions, validates them server-side, and sends
- * an email to info@brilliantbeaconservices.co.uk via Resend
+ * Receives contact-form submissions, validates them server-side, saves each
+ * one into the D1 database (binding name: DB), and sends a notification
+ * email to info@brilliantbeaconservices.co.uk via Resend
  * (https://resend.com). The API key lives ONLY in the Cloudflare Pages
  * environment variable RESEND_API_KEY — never in frontend code.
  *
@@ -15,8 +16,13 @@
  *      Settings → Environment variables).
  *   3. Update the "from" address below once the domain is verified, if
  *      different from no-reply@brilliantbeaconservices.co.uk.
- * Until RESEND_API_KEY is set, submissions fail safely and the visitor sees
- * a friendly "please try again or contact us directly" message.
+ *   4. Create a D1 database (e.g. brilliant-beacon-db), create the
+ *      contact_submissions table in it, and bind it to this Pages project
+ *      under Settings → Functions → D1 database bindings, with variable
+ *      name DB.
+ * Until RESEND_API_KEY is set, email sending fails safely. Until the DB
+ * binding exists, database saving fails safely. The visitor only sees a
+ * "please try again" message if BOTH fail.
  *
  * To switch to a different provider later (SendGrid, Postmark, Mailgun,
  * etc.), only sendEmail() below needs to change — everything else (the
@@ -84,6 +90,32 @@ function escapeHtml(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+/**
+ * Saves the enquiry into the D1 database (binding name: DB) as a permanent,
+ * searchable record — independent of whether the email notification
+ * succeeds. Stores the raw (non-HTML-escaped) values, since this is data,
+ * not markup destined for an email body.
+ */
+async function saveToDatabase(payload, env) {
+  if (!env.DB) {
+    throw new Error("DB binding is not configured");
+  }
+
+  await env.DB.prepare(
+    `INSERT INTO contact_submissions (name, email, telephone, preferred_contact, service, message)
+     VALUES (?, ?, ?, ?, ?, ?)`
+  )
+    .bind(
+      payload.name,
+      payload.email,
+      payload.telephone || null,
+      payload.preferredContact || null,
+      payload.service,
+      payload.message
+    )
+    .run();
 }
 
 /**
@@ -159,21 +191,48 @@ export async function onRequestPost(context) {
     return jsonResponse(400, { error: "Validation failed", details: errors });
   }
 
-  const clean = {
-    name: escapeHtml(payload.name.trim()),
+  const raw = {
+    name: payload.name.trim(),
     email: payload.email.trim(),
-    telephone: payload.telephone ? escapeHtml(String(payload.telephone).trim()) : "",
-    preferredContact: payload.preferredContact ? escapeHtml(String(payload.preferredContact).trim()) : "",
+    telephone: payload.telephone ? String(payload.telephone).trim() : "",
+    preferredContact: payload.preferredContact ? String(payload.preferredContact).trim() : "",
     service: payload.service,
-    message: escapeHtml(payload.message.trim()),
+    message: payload.message.trim()
+  };
+
+  const clean = {
+    name: escapeHtml(raw.name),
+    email: raw.email,
+    telephone: escapeHtml(raw.telephone),
+    preferredContact: escapeHtml(raw.preferredContact),
+    service: raw.service,
+    message: escapeHtml(raw.message),
     source: payload.source ? escapeHtml(String(payload.source).trim()) : "Website Contact Form"
   };
 
+  // Save to the database and send the notification email independently —
+  // a visitor's enquiry counts as "received" if EITHER one succeeds, so a
+  // temporary problem with one channel doesn't lose the enquiry entirely.
+  let dbSaved = false;
+  let emailSent = false;
+
+  try {
+    await saveToDatabase(raw, env);
+    dbSaved = true;
+  } catch (err) {
+    console.error("contact.js DB error:", err && err.message ? err.message : err);
+  }
+
   try {
     await sendEmail(clean, env);
-    return jsonResponse(200, { success: true });
+    emailSent = true;
   } catch (err) {
-    console.error("contact.js error:", err && err.message ? err.message : err);
-    return jsonResponse(502, { error: "Your message could not be sent. Please try again or contact us directly." });
+    console.error("contact.js email error:", err && err.message ? err.message : err);
   }
+
+  if (dbSaved || emailSent) {
+    return jsonResponse(200, { success: true });
+  }
+
+  return jsonResponse(502, { error: "Your message could not be sent. Please try again or contact us directly." });
 }
