@@ -1,7 +1,8 @@
 /**
  * Brilliant Beacon Services — functions/api/create-payment.js (Cloudflare Pages Function)
  *
- * Creates a Stripe Checkout Session for a card payment and returns its
+ * Creates a Stripe Checkout Session (card, or any other payment method enabled
+ * in the Stripe Dashboard, e.g. bank transfer) and returns its
  * hosted-checkout URL. The customer enters their name, email, the amount
  * they've been quoted/invoiced, and a reference on payment.html; card
  * details are only ever entered on Stripe's own hosted page.
@@ -89,6 +90,11 @@ export async function onRequestPost(context) {
   const params = new URLSearchParams();
   params.append("mode", "payment");
   params.append("customer_email", email);
+  // Stripe only offers bank transfer (customer_balance) in Checkout when the
+  // session is linked to a Customer, so always create one. Card payments are
+  // unaffected. Bank transfers are delayed: the webhook records them as
+  // "pending" first, then "paid" on checkout.session.async_payment_succeeded.
+  params.append("customer_creation", "always");
   params.append("line_items[0][quantity]", "1");
   params.append("line_items[0][price_data][currency]", "gbp");
   params.append("line_items[0][price_data][unit_amount]", String(pence));
