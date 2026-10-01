@@ -2,7 +2,7 @@
    Brilliant Beacon Services — payment.js
    Payment page interactions. No payment provider secret keys are ever
    referenced here — session/order creation happens server-side via
-   netlify/functions/create-payment.js.
+   functions/api/create-payment.js (Stripe Checkout).
    ========================================================================== */
 
 (function () {
@@ -25,28 +25,78 @@
     }
   }
 
-  /* ---- Card payment button ---- */
-  var cardBtn = document.getElementById("card-pay-button");
-  if (cardBtn) {
-    cardBtn.addEventListener("click", function () {
-      // When a payment provider is configured, this should call
-      // /api/create-payment to create a secure hosted checkout session
-      // and redirect the browser to the URL it returns. Left inert until
-      // a provider is connected — see README.md "Payments".
-      fetch("/api/create-payment", { method: "POST" })
+  /* ---- Card payment (Stripe Checkout) ---- */
+  var cardForm = document.getElementById("card-pay-form");
+  if (cardForm) {
+    var statusEl = document.getElementById("card-form-status");
+    var submitBtn = document.getElementById("card-pay-button");
+    var originalLabel = submitBtn ? submitBtn.textContent : "";
+
+    function setStatus(type, msg) {
+      if (!statusEl) return;
+      statusEl.className = "form-status " + type;
+      statusEl.textContent = msg;
+      statusEl.hidden = !msg;
+    }
+
+    function parsePence(value) {
+      var cleaned = String(value || "").replace(/[£,\s]/g, "");
+      if (!/^\d+(\.\d{1,2})?$/.test(cleaned)) return null;
+      return Math.round(parseFloat(cleaned) * 100);
+    }
+
+    function check(fieldId, ok) {
+      var field = document.getElementById(fieldId);
+      if (field) field.classList.toggle("has-error", !ok);
+      return ok;
+    }
+
+    cardForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var data = {
+        name: cardForm.name.value.trim(),
+        email: cardForm.email.value.trim(),
+        amount: cardForm.amount.value.trim(),
+        reference: cardForm.reference.value.trim(),
+        "company-website": cardForm["company-website"].value
+      };
+      var pence = parsePence(data.amount);
+      var valid = [
+        check("field-card-name", !!data.name),
+        check("field-card-email", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)),
+        check("field-card-amount", pence !== null && pence >= 100 && pence <= 1000000),
+        check("field-card-reference", !!data.reference)
+      ].every(Boolean);
+      if (!valid) {
+        setStatus("error", "Please check the highlighted fields.");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Redirecting to secure payment…";
+      setStatus("loading", "Preparing your secure payment page…");
+
+      fetch("/api/create-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
         .then(function (res) {
-          if (!res.ok) throw new Error("Payment session could not be created");
-          return res.json();
+          return res.json().catch(function () { return {}; }).then(function (body) {
+            if (res.ok && body && body.checkoutUrl) {
+              window.location.href = body.checkoutUrl;
+              return;
+            }
+            if (res.status === 400 && body && body.details) {
+              throw new Error(body.details.join(" "));
+            }
+            window.location.href = "payment-error.html";
+          });
         })
-        .then(function (data) {
-          if (data && data.checkoutUrl) {
-            window.location.href = data.checkoutUrl;
-          } else {
-            throw new Error("No checkout URL returned");
-          }
-        })
-        .catch(function () {
-          window.location.href = "payment-error.html";
+        .catch(function (err) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalLabel;
+          setStatus("error", err && err.message ? err.message : "Something went wrong. Please try again.");
         });
     });
   }

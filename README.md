@@ -170,10 +170,10 @@ Because Plausible doesn't use cookies or collect personal data, no cookie-consen
 The Payment page (`payment.html`) supports three methods, none of which are "live" until configured:
 
 - **PayPal** — replace the `data-paypal-link="PAYPAL_PAYMENT_LINK"` attribute in `payment.html` with a real PayPal payment link supplied by Brilliant Beacon Services. `js/payment.js` automatically activates the button once a real link (not the placeholder text) is present.
-- **Card payment** — `netlify/functions/create-payment.js` is a documented stub for creating a secure hosted checkout session with a payment provider (e.g. Stripe). It requires `PAYMENT_PROVIDER_SECRET` to be set, and its example code shows exactly where to add real provider calls.
+- **Card payment (Stripe)** — the customer enters name, email, amount and quote/invoice reference on `payment.html`; `functions/api/create-payment.js` creates a Stripe Checkout Session (GBP, £1–£10,000) and redirects to Stripe's hosted page. Requires `STRIPE_SECRET_KEY`.
 - **Bank transfer** — replace the placeholders in the bank details table in `payment.html` with real account details once confirmed.
 
-**Payment verification**: reaching `payment-success.html` does **not** by itself confirm a payment. `netlify/functions/payment-webhook.js` is where real, provider-verified confirmation should happen (via signature verification — see the comments in that file), before anything is treated as paid or an internal confirmation email is sent.
+**Payment verification**: reaching `payment-success.html` does **not** by itself confirm a payment. `functions/api/payment-webhook.js` verifies Stripe's webhook signature (`STRIPE_WEBHOOK_SECRET`), records the payment in the D1 `payments` table (auto-created), and emails info@ via Resend. In Stripe, add the endpoint `https://brilliantbeaconservices.co.uk/api/payment-webhook` with events `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`.
 
 **No card data is ever collected or stored by this website** — card payment goes through your provider's own hosted checkout page.
 
@@ -190,7 +190,8 @@ Set these in Netlify under **Site settings → Environment variables** (and in a
 | `RESEND_API_KEY` | `netlify/functions/contact.js` | Authenticates with Resend to send contact-form notification emails |
 | `PAYPAL_CLIENT_ID` | *(only if using PayPal's JS SDK/buttons rather than a payment link)* | PayPal integration |
 | `PAYPAL_CLIENT_SECRET` | *(server-side PayPal API calls, if used)* | PayPal integration |
-| `PAYMENT_PROVIDER_SECRET` | `netlify/functions/create-payment.js`, `payment-webhook.js` | Card payment provider secret key + webhook signature verification |
+| `STRIPE_SECRET_KEY` | `functions/api/create-payment.js` | Stripe secret key (creates Checkout Sessions) |
+| `STRIPE_WEBHOOK_SECRET` | `functions/api/payment-webhook.js` | Stripe webhook signing secret (`whsec_...`) |
 | `TURNSTILE_SECRET_KEY` | *(add if Cloudflare Turnstile is enabled — see Security)* | Bot/spam protection |
 
 Only add the variables you actually end up using — remove any row above that doesn't apply once providers are chosen.

@@ -70,7 +70,7 @@
 
   <section>
     <div class="container">
-      <p class="placeholder-note">Payment processing shown below requires live configuration (a real PayPal link, a card-payment provider account, and confirmed bank details) before it can be used by customers. Nothing here is a working payment link until Brilliant Beacon Services supplies and confirms these details. See <code>README.md</code> for setup instructions.</p>
+      <p class="placeholder-note">PayPal and bank transfer details are still being set up — please pay by card, or <a href="contact.html">contact us</a> to arrange another method.</p>
 
       <div class="payment-methods" style="margin-top: var(--space-7);">
 
@@ -86,16 +86,43 @@
           <a class="btn btn-primary btn-block" id="paypal-button" href="#" data-paypal-link="PAYPAL_PAYMENT_LINK" aria-disabled="true">Pay with PayPal</a>
         </div>
 
-        <!-- CARD -->
+        <!-- CARD (Stripe Checkout) -->
         <div class="payment-method-card">
           <h3><span aria-hidden="true">💳</span> Pay by Card</h3>
-          <p>Pay by card via our secure hosted checkout, supporting cards accepted by our payment provider, including Visa and Mastercard where enabled.</p>
+          <p>Pay the amount on your quote or invoice by debit or credit card through Stripe's secure checkout.</p>
           <ul>
-            <li>Handled by a secure, hosted payment page</li>
-            <li>Card details are never stored by this website</li>
+            <li>Card details are entered on Stripe's secure page, never on this website</li>
+            <li>Visa, Mastercard, Amex, Apple Pay and Google Pay where enabled</li>
           </ul>
-          <div class="placeholder-note">Card payments require a configured payment provider (e.g. Stripe) and the <code>create-payment</code> Cloudflare Pages function to be connected to a live account. Not yet active.</div>
-          <button class="btn btn-primary btn-block" id="card-pay-button" type="button" disabled>Pay by Card</button>
+          <div class="form-status" id="card-form-status" role="status" hidden></div>
+          <form id="card-pay-form" novalidate>
+            <div class="hp-field" aria-hidden="true">
+              <label for="card-company-website">Leave this field blank</label>
+              <input type="text" id="card-company-website" name="company-website" tabindex="-1" autocomplete="off">
+            </div>
+            <div class="form-field" id="field-card-name">
+              <label for="card-name">Full Name <span aria-hidden="true">*</span></label>
+              <input type="text" id="card-name" name="name" autocomplete="name" maxlength="200" required aria-required="true">
+              <p class="error-message">Please enter your full name.</p>
+            </div>
+            <div class="form-field" id="field-card-email">
+              <label for="card-email">Email Address <span aria-hidden="true">*</span></label>
+              <input type="email" id="card-email" name="email" autocomplete="email" maxlength="200" required aria-required="true">
+              <p class="hint">Your receipt is sent here.</p>
+              <p class="error-message">Please enter a valid email address.</p>
+            </div>
+            <div class="form-field" id="field-card-amount">
+              <label for="card-amount">Amount (£) <span aria-hidden="true">*</span></label>
+              <input type="text" id="card-amount" name="amount" inputmode="decimal" placeholder="e.g. 150.00" required aria-required="true">
+              <p class="error-message">Please enter an amount between £1 and £10,000.</p>
+            </div>
+            <div class="form-field" id="field-card-reference">
+              <label for="card-reference">Quote / Invoice Reference <span aria-hidden="true">*</span></label>
+              <input type="text" id="card-reference" name="reference" maxlength="200" placeholder="e.g. invoice number or job address" required aria-required="true">
+              <p class="error-message">Please enter a reference so we can match your payment.</p>
+            </div>
+            <button class="btn btn-primary btn-block" id="card-pay-button" type="submit">Continue to Secure Payment</button>
+          </form>
         </div>
 
         <!-- BANK TRANSFER -->
