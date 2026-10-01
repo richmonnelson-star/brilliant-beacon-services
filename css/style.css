@@ -814,6 +814,29 @@ body .btn-secondary.on-light:hover { background: var(--color-primary); color: #f
 }
 .payment-method-card h3 { display: flex; align-items: center; gap: var(--space-2); }
 .payment-method-card ul { color: var(--color-text-muted); font-size: var(--fs-sm); }
+/* Payment page: three-box layout with brand icons */
+.payment-method-card { background: var(--color-bg); box-shadow: var(--shadow-sm); transition: border-color var(--transition-base) ease, box-shadow var(--transition-base) ease; }
+.payment-method-card:hover { box-shadow: var(--shadow-md); }
+.payment-method-card.is-selected { border-color: var(--color-accent); box-shadow: 0 0 0 2px var(--color-accent), var(--shadow-md); }
+.pm-head { display: flex; align-items: center; gap: var(--space-3); }
+.pm-head h3 { margin: 0; }
+.pm-icon { flex: 0 0 auto; width: 44px; height: 44px; border-radius: 50%; background: var(--color-primary); color: var(--color-accent); display: inline-flex; align-items: center; justify-content: center; }
+.pm-svg { width: 20px; height: 20px; }
+.pm-badges { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.pm-badge { display: inline-flex; align-items: center; gap: 6px; height: 42px; padding: 0 10px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); color: var(--color-primary); font-size: var(--fs-xs); font-weight: 700; }
+.pm-badge-svg { height: 30px; width: auto; }
+.pm-points { color: var(--color-text-muted); font-size: var(--fs-sm); margin: 0; }
+.pm-action { margin-top: auto; }
+.payment-details { margin-top: var(--space-7); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg-alt); padding: var(--space-6); scroll-margin-top: 100px; }
+.payment-details-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-4); }
+.payment-details-title { font-size: var(--fs-lg, 1.25rem); margin: 0; }
+.payment-details-method { margin: 0; font-weight: 700; color: var(--color-primary); }
+.payment-details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 var(--space-5); }
+.secure-note { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; margin: var(--space-4) 0 0; color: var(--color-text-muted); font-size: var(--fs-xs); text-align: center; }
+.secure-note-svg { width: 12px; height: 12px; }
+.secure-note-stripe { height: 22px; width: auto; color: #635bff; }
+.secure-note-sep { opacity: .6; }
+@media (max-width: 640px) { .payment-details-grid { grid-template-columns: 1fr; } .payment-details { padding: var(--space-5); } }
 .bank-details-table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); }
 .bank-details-table th, .bank-details-table td {
   text-align: left; padding: var(--space-2) var(--space-3);

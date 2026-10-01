@@ -71,6 +71,11 @@ export async function onRequestPost(context) {
   const email = typeof payload.email === "string" ? payload.email.trim() : "";
   const reference = typeof payload.reference === "string" ? payload.reference.trim() : "";
   const pence = poundsToPence(payload.amount);
+  // "wallet" = the Pay Online box (Apple Pay / Google Pay). Restricting
+  // Checkout to the card method shows the Apple Pay / Google Pay buttons on
+  // supported devices, with card entry as the fallback. "any" (default) =
+  // the Card or Bank box: every method enabled in the Stripe Dashboard.
+  const method = payload.method === "wallet" ? "wallet" : "any";
 
   const errors = [];
   if (!name || name.length > MAX_FIELD_LENGTH) errors.push("A valid name is required.");
@@ -95,6 +100,9 @@ export async function onRequestPost(context) {
   // unaffected. Bank transfers are delayed: the webhook records them as
   // "pending" first, then "paid" on checkout.session.async_payment_succeeded.
   params.append("customer_creation", "always");
+  if (method === "wallet") {
+    params.append("payment_method_types[0]", "card");
+  }
   params.append("line_items[0][quantity]", "1");
   params.append("line_items[0][price_data][currency]", "gbp");
   params.append("line_items[0][price_data][unit_amount]", String(pence));
@@ -102,6 +110,7 @@ export async function onRequestPost(context) {
   params.append("line_items[0][price_data][product_data][description]", `Reference: ${reference}`);
   params.append("metadata[customer_name]", name);
   params.append("metadata[reference]", reference);
+  params.append("metadata[checkout_option]", method === "wallet" ? "Pay Online" : "Card or Bank");
   params.append("payment_intent_data[description]", `Brilliant Beacon Services — ${reference} — ${name}`);
   params.append("payment_intent_data[metadata][customer_name]", name);
   params.append("payment_intent_data[metadata][reference]", reference);

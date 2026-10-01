@@ -20,7 +20,7 @@
     } else {
       paypalBtn.addEventListener("click", function (e) {
         e.preventDefault();
-        alert("PayPal payments are not yet configured. Please contact us to arrange payment, or use bank transfer.");
+        alert("PayPal payments are coming soon. Please use Pay Online or Card or Bank, or contact us to arrange payment.");
       });
     }
   }
@@ -30,7 +30,38 @@
   if (cardForm) {
     var statusEl = document.getElementById("card-form-status");
     var submitBtn = document.getElementById("card-pay-button");
+    var methodInput = document.getElementById("card-method");
+    var methodLabel = document.getElementById("payment-method-label");
+    var detailsPanel = document.getElementById("payment-details");
+    var METHODS = {
+      wallet: { label: "Paying with Apple Pay / Google Pay", button: "Continue to Apple Pay / Google Pay" },
+      any: { label: "Paying by card or bank", button: "Continue to Secure Payment" }
+    };
     var originalLabel = submitBtn ? submitBtn.textContent : "";
+
+    function chooseMethod(method, scroll) {
+      if (!METHODS[method]) method = "any";
+      if (methodInput) methodInput.value = method;
+      if (methodLabel) methodLabel.textContent = METHODS[method].label;
+      if (submitBtn) { submitBtn.textContent = METHODS[method].button; originalLabel = submitBtn.textContent; }
+      var cards = document.querySelectorAll("[data-method-card]");
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.toggle("is-selected", cards[i].getAttribute("data-method-card") === method);
+      }
+      if (scroll && detailsPanel) {
+        detailsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+        var first = document.getElementById("card-name");
+        if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, 400);
+      }
+    }
+
+    var chooseButtons = document.querySelectorAll(".js-choose-method");
+    for (var b = 0; b < chooseButtons.length; b++) {
+      chooseButtons[b].addEventListener("click", function () {
+        chooseMethod(this.getAttribute("data-method"), true);
+      });
+    }
+    chooseMethod(methodInput ? methodInput.value : "any", false);
 
     function setStatus(type, msg) {
       if (!statusEl) return;
@@ -58,6 +89,7 @@
         email: cardForm.email.value.trim(),
         amount: cardForm.amount.value.trim(),
         reference: cardForm.reference.value.trim(),
+        method: methodInput ? methodInput.value : "any",
         "company-website": cardForm["company-website"].value
       };
       var pence = parsePence(data.amount);
